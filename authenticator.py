@@ -2,7 +2,8 @@ class Authenticator:
     """Handles authentication and role verification only"""
 
     def __init__(self, users_db):
-        self.roles = ["admin", "internal_admin", "project_admin", "internal", "external"]
+        self.roles = ["admin", "internal_admin",
+                      "project_admin", "internal", "external"]
         self.users_db = users_db
         self.current_user = None
 
@@ -32,7 +33,7 @@ class Authenticator:
             print("No user is currently logged in")
 
     def has_permission(self, target_role=None):
-        '''First check credentials, then check roles'''
+        # First check credentials
         if not self.current_user:
             print("Access denied! Please log in first")
             return False
@@ -40,9 +41,15 @@ class Authenticator:
         current_role_level = self._get_role_level(self.current_user['role'])
         target_role_level = self._get_role_level(target_role)
 
+        # Reject if target_role is invalid
+        if target_role and target_role_level == len(self.roles):
+            print(f"Access denied. Invalid role: {target_role}")
+            return False
+
+        # Reject if user role is lower than target role
         if current_role_level > target_role_level:
-            print(f"Access denied. Requires {self.roles[target_role_level]} or higher")
+            print(
+                f"Access denied. Requires {self.roles[target_role_level]} or higher")
             return False
 
         return True
-

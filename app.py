@@ -8,8 +8,8 @@ if __name__ == "__main__":
     user_manager = UserManager(auth)
 
     auth.login("xujia", "xujia")
-    user_manager.create_user("superman", "superman", "admin")
-    user_manager.get_one_user("superman")
+    # user_manager.create_user("superman", "superman", "admin")
+    # user_manager.get_one_user("superman")
     user_manager.get_all_users()
     auth.logout()
 
