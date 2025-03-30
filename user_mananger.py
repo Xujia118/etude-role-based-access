@@ -6,19 +6,23 @@ class UserManager:
         self.users = authenticator.users_db
 
     def get_all_users(self):
-        if not self.auth.has_permission():
+        if not self.auth.has_permission(): # only need to check credentials, so no role passed in
             return None
+        
+        print("All users:", self.users)
         return self.users
     
     def get_one_user(self, username):
+        if not self.auth.has_permission():  # only need to check credentials, so no role passed in
+            return None
+        
         for user in self.users.values():
             if user['username'] == username:
                 print(f"Query result: {user}")
                 return user
 
     def get_current_user(self):
-        if not self.auth.current_user:
-            print("No user is currently logged in")
+        if not self.auth.has_permission():  # only need to check credentials, so no role passed in
             return None
         
         print("Current user:", self.auth.current_user)
@@ -33,6 +37,9 @@ class UserManager:
                 return user['role']
 
     def create_user(self, username, password, role):
+        if not self.auth.has_permission():  # only need to check credentials, so no role passed in
+            return None
+        
         # TODO check if the user exists
 
         if role not in self.auth.roles:
@@ -41,8 +48,10 @@ class UserManager:
         
         if not self.auth.has_permission(role):
             return False
+        
+        user_id = 1 + len(self.users)
 
-        self.users[username] = {
+        self.users[str(user_id)] = {
             "username": username,
             "password": password,
             "role": role
@@ -51,10 +60,10 @@ class UserManager:
         return True
 
     def delete_user(self, username):        
-        target_user_role = self._get_target_user_role(username);
-
         if not self.auth.has_permission(target_user_role):
-            return False
+            return None
+        
+        target_user_role = self._get_target_user_role(username);
 
         if not self.auth.can_modify_user(username, self.users):
             print(f"Cannot delete user {username} - insufficient privileges")
@@ -66,7 +75,7 @@ class UserManager:
 
     def update_user(self, username, password=None, role=None):
         if not self.auth.has_permission(role):
-            return False
+            return None
 
         for user in self.users.values():
             if user['username'] == username:

@@ -7,10 +7,9 @@ if __name__ == "__main__":
     auth = Authenticator(valid_users.copy())
     user_manager = UserManager(auth)
 
-    auth.login("charlie", "charlie")
-    user_manager.get_current_user()
-    user_manager.create_user("shirley", "shirley", "admin")
-    user_manager.get_one_user("david")
-    user_manager.update_user("david", "DAVID", "internal_admin")
+    auth.login("xujia", "xujia")
+    user_manager.create_user("superman", "superman", "admin")
+    user_manager.get_one_user("superman")
+    user_manager.get_all_users()
     auth.logout()
 

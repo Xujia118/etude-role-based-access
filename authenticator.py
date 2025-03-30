@@ -31,8 +31,8 @@ class Authenticator:
         else:
             print("No user is currently logged in")
 
-    def has_permission(self, target_role):
-        """Check if current user has required permissions"""
+    def has_permission(self, target_role=None):
+        '''First check credentials, then check roles'''
         if not self.current_user:
             print("Access denied! Please log in first")
             return False
